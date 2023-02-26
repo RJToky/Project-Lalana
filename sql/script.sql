@@ -30,6 +30,11 @@ create table pk (
     valeur double precision
 );
 
+insert into pk values
+    (default, 'point(-18.983055 47.532568)', 25),
+    (default, 'point(-18.994326 47.534231)', 27)
+;
+
 create table simba (
     idSimba serial primary key,
     idLalana int,
@@ -40,6 +45,10 @@ create table simba (
     foreign key (idPk_debut) references pk(idPk),
     foreign key (idPk_fin) references pk(idPk)
 );
+
+insert into simba values
+    (default, 7, 1, 2, 14)
+;
 
 create table couche (
     idCouche serial primary key,
