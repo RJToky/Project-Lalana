@@ -21,7 +21,7 @@ def main():
             popup = couche_coord[i][4]
         ).add_to(map)
 
-    map.save("index.html")
+    map.save("./web/map.html")
 
 if __name__ == "__main__":
     main()
