@@ -1,9 +1,12 @@
+import json
 from connection.Bdd import Bdd
-from dao.CoucheDAO import CoucheDAO
+from dao.CoucheDetailDAO import CoucheDetailDAO
 
 def main():
     con = Bdd.connect()
-    data = CoucheDAO.find_all_couche_coord(con)
+    data = CoucheDetailDAO.find_by_id(None, 0)
+    # data = [2, 3, 4]
+    d = json.dumps(data)
     print(data)
     
     con.close()

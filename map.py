@@ -1,7 +1,7 @@
 import folium
 from connection.Bdd import Bdd
 from dao.LalanaDAO import *
-from dao.CoucheDAO import *
+from dao.CoucheDetailDAO import *
 
 def main():
     # -19.001707, 47.538223
@@ -12,14 +12,21 @@ def main():
 
     con = Bdd.connect()
 
-    couche_coord = CoucheDAO.find_all_couche_coord(con)
+    couche_detail = CoucheDetailDAO.find_all(con)
 
-    for i in range(len(couche_coord)):
+    for i in range(len(couche_detail)):
         folium.Marker(
-            location = [couche_coord[i][2], couche_coord[i][3]],
-            icon = folium.Icon(icon = couche_coord[i][1], prefix = "fa"),
-            popup = couche_coord[i][4]
+            location = [couche_detail[i][2], couche_detail[i][3]],
+            icon = folium.Icon(icon = couche_detail[i][1], prefix = "fa", color = "green"),
+            popup = couche_detail[i][4]
         ).add_to(map)
+
+        # folium.Circle(
+        #     location = [couche_detail[i][2], couche_detail[i][3]],
+        #     radius = 1000,
+        #     fill = True,
+        #     color = "green"
+        # ).add_to(map)
 
     map.save("./web/map.html")
 

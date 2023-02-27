@@ -1,8 +1,8 @@
 from connection.Bdd import Bdd
 
-class CoucheDAO:
+class SimbaDAO:
     @staticmethod
-    def find_all(con):
+    def find_pk_debut_fin(con):
         __is_open = False
         try:
             if con is None:

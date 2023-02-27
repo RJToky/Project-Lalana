@@ -75,3 +75,9 @@ insert into couche_coord values
     (default, 2, 'point(-18.919367 47.523027)', 'Hopital Befelatanana'),
     (default, 2, 'point(-18.889833 47.490656)', 'Hopital Manara-penitra')
 ;
+
+create or replace view couche_detail as (
+    select cc.idCouche_coord, c.karazany, st_x(st_astext(cc.coord)), st_y(st_astext(cc.coord)), cc.nom, c.idCouche
+    from couche c
+    natural join couche_coord cc
+);

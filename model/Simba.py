@@ -3,15 +3,21 @@ from model.Lalana import Lalana
 class Simba:
     def __init__(self, lalana: Lalana, pk_debut: float, pk_fin: float, niveau: int) -> None:
         self.set_lalana(lalana)
-        self.set_pk_debut(pk_debut) #km
-        self.set_pk_fin(pk_fin)     #km
+        self.set_pk_debut(pk_debut) # km
+        self.set_pk_fin(pk_fin)     # km
         self.set_niveau(niveau)
 
     def calc_cout(self, prix_metre_cube: float) -> float:
-        longueur = (self.get_pk_fin() - self.get_pk_debut()) * 1000     #m
-        profondeur = (self.get_niveau() / 10)                           #cm
-        profondeur /= 100                                               #m
-        return longueur * profondeur * self.get_lalana().get_largeur() * prix_metre_cube
+        return self.calc_volume() * prix_metre_cube
+
+    def calc_volume(self) -> float:
+        longueur = (self.get_pk_fin() - self.get_pk_debut()) * 1000     # m
+        profondeur = (self.get_niveau() / 10)                           # cm
+        profondeur /= 100                                               # m
+        return longueur * profondeur * self.get_lalana().get_largeur()  # m3
+
+    def calc_duration(self, duree_metre_cube: float) -> float:
+        return self.calc_volume() * duree_metre_cube
 
     def get_lalana(self) -> Lalana:
         return self.__lalana
