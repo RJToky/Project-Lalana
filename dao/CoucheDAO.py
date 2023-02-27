@@ -35,8 +35,9 @@ class CoucheDAO:
             
             cur = con.cursor()
             sql = """
-                select *, st_x(st_astext(coord)), st_y(st_astext(coord))
-                from couche_coord
+                select cc.idCouche_coord, c.karazany, st_x(st_astext(cc.coord)), st_y(st_astext(cc.coord)), cc.nom
+                from couche c
+                natural join couche_coord cc
             """
             cur.execute(sql)
             data = cur.fetchall()

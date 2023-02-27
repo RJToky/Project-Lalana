@@ -56,8 +56,9 @@ create table couche (
 );
 
 insert into couche values
-    (default, 'ecole'),
-    (default, 'hopital')
+    (default, 'school'),
+    (default, 'hospital'),
+    (default, 'hotel')
 ;
 
 create table couche_coord (

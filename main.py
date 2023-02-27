@@ -4,7 +4,7 @@ from dao.CoucheDAO import CoucheDAO
 def main():
     con = Bdd.connect()
     data = CoucheDAO.find_all_couche_coord(con)
-    print(data[0][4])
+    print(data)
     
     con.close()
 

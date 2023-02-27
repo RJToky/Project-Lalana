@@ -22,7 +22,12 @@ def main():
     couche_coord = CoucheDAO.find_all_couche_coord(con)
 
     for i in range(len(couche_coord)):
-        place_marker(map, [couche_coord[i][4], couche_coord[i][5]], couche_coord[i][3], folium.Icon(icon = "home"))
+        place_marker(
+            map,
+            [couche_coord[i][2], couche_coord[i][3]],
+            couche_coord[i][4],
+            folium.Icon(icon = couche_coord[i][1], prefix = "fa")
+        )
 
     map.save("index.html")
 
