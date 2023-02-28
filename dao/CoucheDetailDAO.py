@@ -58,3 +58,34 @@ class CoucheDetailDAO:
                 con.close()
             cur.close()
         return rep
+
+    @staticmethod
+    def find_by_idTypeCouche(con, id: int):
+        __is_open = False
+        try:
+            if con is None:
+                __is_open = True
+                con = Bdd.connect()
+            
+            cur = con.cursor()
+            sql = """
+                select *
+                from coucheDetail
+                where idTypeCouche = %s
+            """
+            value = (id, )
+            cur.execute(sql, value)
+            data = cur.fetchall()
+
+            rep = []
+            for row in data:
+                temp = CoucheDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                rep.append(temp)
+
+        except(Exception) as e:
+            raise e
+        finally:
+            if __is_open:
+                con.close()
+            cur.close()
+        return rep

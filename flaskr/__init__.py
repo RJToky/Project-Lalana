@@ -1,36 +1,39 @@
 import folium
 from map import *
 from flask import Flask, render_template, request, redirect
-from dao.CoucheDetailDAO import CoucheDetailDAO
+from dao.TypeCoucheDAO import TypeCoucheDAO
 from dao.SimbaDetailDAO import SimbaDetailDAO
+from dao.CoucheDetailDAO import CoucheDetailDAO
 from dao.SimbaDAO import SimbaDAO
 from connection.Bdd import Bdd
 
 def create_app():
     app = Flask(__name__, template_folder = "../web/", static_folder = "../static/")
-    folium_map = instance_map()
 
     @app.route("/")
     def index():
         map_template = render_template("map.html")
-        form_template = render_template("form.html", data = CoucheDetailDAO.find_all(None))
+        form_template = render_template("form.html", data = TypeCoucheDAO.find_all(None))
         return map_template + form_template
     
     @app.route("/map")
     def result():
         map_template = render_template("map.html")
-        form_template = render_template("form.html", data = CoucheDetailDAO.find_all(None))
+        form_template = render_template("form.html", data = TypeCoucheDAO.find_all(None))
         return map_template + form_template
     
     @app.route("/traitement", methods = ["GET", "POST"])
     def traitement():
+        folium_map = instance_map()
+
         con = Bdd.connect()
         limit = request.form["limit"]
+        typeCouche = request.form["typeCouche"]
 
-        if request.form["couche"] == "0":
+        if typeCouche == "0":
             couche_detail = CoucheDetailDAO.find_all(con)
         else:
-            couche_detail = CoucheDetailDAO.find_by_id(con, request.form["couche"])
+            couche_detail = CoucheDetailDAO.find_by_idTypeCouche(con, typeCouche)
 
         for i in range(len(couche_detail)):
             popup_couche = """
