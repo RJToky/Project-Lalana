@@ -5,60 +5,62 @@ from dao.SimbaDetailDAO import SimbaDetailDAO
 from dao.SimbaDAO import SimbaDAO
 
 def get_icon(key: str) -> str:
-    if key == "population":
-        return "home"
-    return key
+    if key == "Etablissement":
+        return "school"
+    elif key == "Hopital":
+        return "hospital"
+    return "marker"
+
+def instance_map(location = [-19.001707, 47.538223], zoom_start = 13):
+    folium_map = folium.Map(
+        location = location,
+        zoom_start = zoom_start
+    )
+    return folium_map
 
 def init():
-    # -19.001707, 47.538223
-    map = folium.Map(
-        location = [-19.001707, 47.538223],
-        zoom_start = 13
-    )
-
+    folium_map = instance_map()
     con = Bdd.connect()
 
     couche_detail = CoucheDetailDAO.find_all(con)
-
     for i in range(len(couche_detail)):
         popup_couche = """
-            <p>Nom : """ + couche_detail[i][4] + """</p>
-            <p>Nbr : """ + str(couche_detail[i][7]) + """</p>
+            <p>Nom : """ + couche_detail[i].nom + """</p>
+            <p>Nbr : """ + str(couche_detail[i].nbr) + """</p>
         """
         folium.Marker(
-            location = [couche_detail[i][2], couche_detail[i][3]],
-            icon = folium.Icon(icon = get_icon(couche_detail[i][1]), prefix = "fa", color = "green"),
+            location = [couche_detail[i].x, couche_detail[i].y],
+            icon = folium.Icon(icon = get_icon(couche_detail[i].nomType), prefix = "fa", color = "green"),
             popup = popup_couche
-        ).add_to(map)
+        ).add_to(folium_map)
     
-    coord_simba = SimbaDetailDAO.find_all(con)
-
-    for i in range(len(coord_simba)):
+    simba_detail = SimbaDetailDAO.find_all(con)
+    for i in range(len(simba_detail)):
         folium.PolyLine(
-            locations = [[coord_simba[i][0], coord_simba[i][1]], [coord_simba[i][2], coord_simba[i][3]]],
+            locations = [[simba_detail[i].x_debut, simba_detail[i].y_debut], [simba_detail[i].x_fin, simba_detail[i].y_fin]],
             color = "red"
-        ).add_to(map)
+        ).add_to(folium_map)
 
-        simba = SimbaDAO.find_by_id(con, coord_simba[i][0])
-                
+        simba = SimbaDAO.find_by_id(con, simba_detail[i].idSimba)
+        
         popup_pk = """
-            <p>Cout : """ + str(simba.calc_cout(con, 6000)) + """ Ar</p>
-            <p>Duree : """ + str(simba.calc_duration(con, 6)) + """ h</p>
+            <p>Cout : """ + str(simba.calc_cout(con)) + """ Ar</p>
+            <p>Duree : """ + str(simba.calc_duration(con)) + """ h</p>
         """
 
         folium.Marker(
-            location = [coord_simba[i][0], coord_simba[i][1]],
+            location = [simba_detail[i].x_debut, simba_detail[i].y_debut],
             icon = folium.Icon(color = "red"),
             popup = popup_pk
-        ).add_to(map)
+        ).add_to(folium_map)
 
         folium.Marker(
-            location = [coord_simba[i][2], coord_simba[i][3]],
+            location = [simba_detail[i].x_fin, simba_detail[i].y_fin],
             icon = folium.Icon(color = "red"),
             popup = popup_pk
-        ).add_to(map)
+        ).add_to(folium_map)
 
-    map.save("./web/map.html")
+    folium_map.save("./web/map.html")
     con.close()
 
 if __name__ == "__main__":

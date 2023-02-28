@@ -20,7 +20,7 @@ class SimbaDAO:
             cur.execute(sql, value)
             data = cur.fetchone()
 
-            rep = Simba(data[0], data[1], data[2], data[3], data[4])
+            rep = Simba(data[0], data[1], data[2], data[3])
 
         except(Exception) as e:
             raise e

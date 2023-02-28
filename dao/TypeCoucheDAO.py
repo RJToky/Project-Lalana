@@ -1,9 +1,9 @@
 from connection.Bdd import Bdd
-from model.Couche import Couche
+from model.TypeCouche import TypeCouche
 
-class CoucheDAO:
+class TypeCoucheDAO:
     @staticmethod
-    def find_by_id(con, id: int) -> Couche:
+    def find_by_id(con, id: int) -> TypeCouche:
         __is_open = False
         try:
             if con is None:
@@ -13,14 +13,14 @@ class CoucheDAO:
             cur = con.cursor()
             sql = """
                 select *
-                from couche
-                where idCouche = %s
+                from typeCouche
+                where idTypeCouche = %s
             """
             value = (id, )
             cur.execute(sql, value)
             data = cur.fetchone()
 
-            rep = Couche(data[0], data[1], data[2], data[3], data[4])
+            rep = TypeCouche(data[0], data[1])
 
         except(Exception) as e:
             raise e
@@ -41,14 +41,14 @@ class CoucheDAO:
             cur = con.cursor()
             sql = """
                 select *
-                from couche
+                from typeCouche
             """
             cur.execute(sql)
             data = cur.fetchall()
 
             rep = []
             for row in data:
-                temp = Couche(row[0], row[1], row[2], row[3], row[4])
+                temp = TypeCouche(row[0], row[1])
                 rep.append(temp)
 
         except(Exception) as e:

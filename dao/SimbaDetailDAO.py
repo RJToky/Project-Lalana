@@ -3,6 +3,34 @@ from model.SimbaDetail import SimbaDetail
 
 class SimbaDetailDAO:
     @staticmethod
+    def find_by_id(con, id: int) -> SimbaDetail:
+        __is_open = False
+        try:
+            if con is None:
+                __is_open = True
+                con = Bdd.connect()
+            
+            cur = con.cursor()
+            sql = """
+                select *
+                from simbaDetail
+                where idSimba = %s
+            """
+            value = (id, )
+            cur.execute(sql, value)
+            data = cur.fetchone()
+
+            rep = SimbaDetail(data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+
+        except(Exception) as e:
+            raise e
+        finally:
+            if __is_open:
+                con.close()
+            cur.close()
+        return rep
+    
+    @staticmethod
     def find_all(con):
         __is_open = False
         try:
@@ -13,7 +41,7 @@ class SimbaDetailDAO:
             cur = con.cursor()
             sql = """
                 select *
-                from simba_detail
+                from simbaDetail
             """
             cur.execute(sql)
             data = cur.fetchall()
@@ -32,7 +60,7 @@ class SimbaDetailDAO:
         return rep
     
     @staticmethod
-    def find_simba_within_limit(con, point_couche, limit) -> SimbaDetail:
+    def find_simba_within_couche(con, point_couche, limit) -> SimbaDetail:
         __is_open = False
         try:
             if con is None:
@@ -41,7 +69,7 @@ class SimbaDetailDAO:
             
             cur = con.cursor()
             sql = """
-                select * from simba_detail
+                select * from simbaDetail
                 where st_dwithin(coord_debut, %s, %s) or st_dwithin(coord_fin, %s, %s)
             """
             value = (point_couche, limit, point_couche, limit)
