@@ -31,8 +31,10 @@ create table pk (
 );
 
 insert into pk values
-    (default, 'point(-18.983055 47.532568)', 25),
-    (default, 'point(-18.994326 47.534231)', 27)
+    (default, 'point(-18.986367 47.532749)', 25),
+    (default, 'point(-18.986773 47.532481)', 25.4),
+    (default, 'point(-18.992064 47.532851)', 28),
+    (default, 'point(-18.993286 47.533693)', 28.5)
 ;
 
 create table simba (
@@ -47,7 +49,8 @@ create table simba (
 );
 
 insert into simba values
-    (default, 7, 1, 2, 14)
+    (default, 7, 1, 2, 14),
+    (default, 7, 3, 4, 10)
 ;
 
 create table couche (
@@ -77,7 +80,14 @@ insert into couche_coord values
 ;
 
 create or replace view couche_detail as (
-    select cc.idCouche_coord, c.karazany, st_x(st_astext(cc.coord)), st_y(st_astext(cc.coord)), cc.nom, c.idCouche
+    select cc.idCouche_coord, c.karazany, st_x(st_astext(cc.coord)), st_y(st_astext(cc.coord)), cc.nom, c.idCouche, st_astext(cc.coord)
     from couche c
     natural join couche_coord cc
+);
+
+create or replace view simba_detail as (
+    select st_x(st_astext(pk1.coord)) x_debut, st_y(st_astext(pk1.coord)) y_debut, st_x(st_astext(pk2.coord)) x_fin, st_y(st_astext(pk2.coord)) y_fin, pk1.coord coord_debut, pk2.coord coord_fin
+    from simba
+    join pk pk1 on simba.idPk_debut = pk1.idPk
+    join pk pk2 on simba.idPk_fin = pk2.idPk
 );
