@@ -1,4 +1,5 @@
 from connection.Bdd import Bdd
+from model.SimbaDetail import SimbaDetail
 
 class SimbaDetailDAO:
     @staticmethod
@@ -15,7 +16,12 @@ class SimbaDetailDAO:
                 from simba_detail
             """
             cur.execute(sql)
-            rep = cur.fetchall()
+            data = cur.fetchall()
+
+            rep = []
+            for row in data:
+                temp = SimbaDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+                rep.append(temp)
 
         except(Exception) as e:
             raise e
@@ -26,7 +32,7 @@ class SimbaDetailDAO:
         return rep
     
     @staticmethod
-    def find_simba_within_limit(con, point_couche, limit):
+    def find_simba_within_limit(con, point_couche, limit) -> SimbaDetail:
         __is_open = False
         try:
             if con is None:
@@ -40,7 +46,12 @@ class SimbaDetailDAO:
             """
             value = (point_couche, limit, point_couche, limit)
             cur.execute(sql, value)
-            rep = cur.fetchall()
+            data = cur.fetchall()
+
+            rep = []
+            for row in data:
+                temp = SimbaDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+                rep.append(temp)
 
         except(Exception) as e:
             raise e

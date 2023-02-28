@@ -33,10 +33,7 @@
   href="{{ url_for('static', filename = 'bulma/bulma.css') }}"
 />
 <div class="js-modal-trigger btn" data-target="modal-js-example">
-  <img
-    src="{{ url_for('static', filename = 'svg/marker-svgrepo-com.svg') }}"
-    alt=""
-  />
+  <img src="{{ url_for('static', filename = 'svg/marker-svgrepo-com.svg') }}" />
 </div>
 <div id="modal-js-example" class="modal" style="z-index: 999">
   <div class="modal-background"></div>
@@ -49,7 +46,7 @@
             <select style="width: 100vw" name="couche" required>
               <option value="0">Tous</option>
               {% for row in data %}
-              <option value="{{ row[0] }}">{{ row[1] }}</option>
+              <option value="{{ row._idCouche }}">{{ row._karazany }}</option>
               {% endfor %}
             </select>
           </div>
