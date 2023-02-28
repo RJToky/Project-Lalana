@@ -56,7 +56,7 @@ create table simba (
     idSimba serial primary key,
     idPk_debut int,
     idPk_fin int,
-    niveau int check(niveau between 0 and 101),
+    niveau int check(niveau between 0 and 100),
     foreign key (idPk_debut) references pk(idPk),
     foreign key (idPk_fin) references pk(idPk)
 );
@@ -100,8 +100,12 @@ create or replace view coucheDetail as (
 );
 
 create or replace view simbaDetail as (
-    select s.idSimba, st_x(st_astext(pk1.coord)) x_debut, st_y(st_astext(pk1.coord)) y_debut, st_x(st_astext(pk2.coord)) x_fin, st_y(st_astext(pk2.coord)) y_fin, pk1.coord coord_debut, pk2.coord coord_fin
+    select s.idSimba, s.idPk_debut, s.idPk_fin, st_x(st_astext(pk1.coord)) x_debut, st_y(st_astext(pk1.coord)) y_debut, st_x(st_astext(pk2.coord)) x_fin, st_y(st_astext(pk2.coord)) y_fin, pk1.coord coord_debut, pk2.coord coord_fin
     from simba s
     join pk pk1 on s.idPk_debut = pk1.idPk
     join pk pk2 on s.idPk_fin = pk2.idPk
 );
+
+
+-- Maka couche manodidina pk iray
+-- select * from couche where st_dwithin(coord, (select coord from pk where idPk = 2), 1000);

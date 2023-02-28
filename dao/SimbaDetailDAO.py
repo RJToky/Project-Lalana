@@ -20,7 +20,7 @@ class SimbaDetailDAO:
             cur.execute(sql, value)
             data = cur.fetchone()
 
-            rep = SimbaDetail(data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+            rep = SimbaDetail(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
 
         except(Exception) as e:
             raise e
@@ -48,7 +48,7 @@ class SimbaDetailDAO:
 
             rep = []
             for row in data:
-                temp = SimbaDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+                temp = SimbaDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
                 rep.append(temp)
 
         except(Exception) as e:
@@ -78,7 +78,7 @@ class SimbaDetailDAO:
 
             rep = []
             for row in data:
-                temp = SimbaDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+                temp = SimbaDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
                 rep.append(temp)
 
         except(Exception) as e:
