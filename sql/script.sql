@@ -93,8 +93,10 @@ insert into couche values
     (default, 3, 'point(-18.978590 47.533285)', 535, 'Village 1')
 ;
 
+-- View
+
 create or replace view coucheDetail as (
-    select c.idCouche, c.idTypeCouche, tc.nomType, st_x(st_astext(c.coord)) x, st_y(st_astext(c.coord)) y, c.nbr, c.nom, st_astext(c.coord) coord
+    select c.idCouche, c.idTypeCouche, tc.nomType, st_x(st_astext(c.coord)) x, st_y(st_astext(c.coord)) y, c.nbr, c.nom, c.coord coord
     from couche c
     natural join typeCouche tc
 );
@@ -106,6 +108,55 @@ create or replace view simbaDetail as (
     join pk pk2 on s.idPk_fin = pk2.idPk
 );
 
+-- Function
 
--- Maka couche manodidina pk iray
--- select * from couche where st_dwithin(coord, (select coord from pk where idPk = 2), 1000);
+create or replace function couche_doublon_inclus(id_lalana int, rayon double precision)
+returns table (idcouche int, idtypecouche int, nomtype varchar(15), x double precision, y double precision, nbr int, nom varchar(30), coord geography(point))
+language plpgsql
+as $$
+declare
+r1 record;
+r2 record;
+
+begin
+    for r1 in (select * from pk where pk.idLalana = id_lalana order by pk.valeur asc)
+    loop
+        for r2 in (select * from coucheDetail cd where st_dwithin(cd.coord, (select pk.coord from pk where pk.idPk = r1.idPk), rayon))
+        loop
+            idcouche := r2.idcouche;
+            idtypecouche := r2.idtypecouche;
+            nomtype := r2.nomtype;
+            x := r2.x;
+            y := r2.y;
+            nbr := r2.nbr;
+            nom := r2.nom;
+            coord := r2.coord;
+            return next;
+        end loop;
+    end loop;
+end;
+$$;
+
+-- Supprimer les doublons
+create or replace function find_couche_in_lalana(id_lalana int, rayon double precision)
+returns table (idcouche int, idtypecouche int, nomtype varchar(15), x double precision, y double precision, nbr int, nom varchar(30), coord geography(point))
+language plpgsql
+as $$
+declare
+r record;
+
+begin
+    for r in (select f.idcouche, f.idtypecouche, f.nomtype, f.x, f.y, f.nbr, f.nom, f.coord from couche_doublon_inclus(id_lalana, rayon) f group by f.idcouche, f.idtypecouche, f.nomtype, f.x, f.y, f.nbr, f.nom, f.coord)
+    loop
+        idcouche := r.idcouche;
+        idtypecouche := r.idtypecouche;
+        nomtype := r.nomtype;
+        x := r.x;
+        y := r.y;
+        nbr := r.nbr;
+        nom := r.nom;
+        coord := r.coord;
+        return next;
+    end loop;
+end;
+$$;

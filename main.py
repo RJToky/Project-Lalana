@@ -1,9 +1,10 @@
 from connection.Bdd import Bdd
 from dao.PkDAO import PkDAO
+from dao.CoucheDetailDAO import CoucheDetailDAO
 
 def main():
     con = Bdd.connect()
-    data = PkDAO.find_all_pk_in_simba(con, 1)
+    data = CoucheDetailDAO.find_couche_in_lalana(con, 7, 1000)
     print(data)
     con.close()
 
