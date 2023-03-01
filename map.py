@@ -5,12 +5,19 @@ from dao.SimbaDetailDAO import SimbaDetailDAO
 from dao.TypeCoucheDAO import TypeCoucheDAO
 from dao.SimbaDAO import SimbaDAO
 
+def time_as_text(time: float) -> str:
+    if time < 24:
+        return str(time) + "h"
+    j = time // 24
+    h = time % 24
+    return str(j) + "j " + str(h) + "h"
+
 def get_icon(key: str) -> str:
     if key == "Etablissement":
         return "school"
     elif key == "Hopital":
         return "hospital"
-    return "marker"
+    return "home"
 
 def instance_map(location = [-19.001707, 47.538223], zoom_start = 13):
     folium_map = folium.Map(
@@ -32,7 +39,7 @@ def init():
             popup_couche = """
                 <p>Nom : """ + couche_detail[j].nom + """</p>
                 <p>Nbr : """ + str(couche_detail[j].nbr) + """</p>
-                """
+            """
             folium.Marker(
                 location = [couche_detail[j].x, couche_detail[j].y],
                 icon = folium.Icon(icon = get_icon(couche_detail[j].nomType), prefix = "fa", color = "green"),
@@ -54,7 +61,7 @@ def init():
         
         popup_pk = """
             <p>Cout : """ + str(simba.calc_cout(con)) + """ Ar</p>
-            <p>Duree : """ + str(simba.calc_duration(con)) + """ h</p>
+            <p>Duree : """ + time_as_text(simba.calc_duration(con)) + """ </p>
         """
 
         folium.Marker(

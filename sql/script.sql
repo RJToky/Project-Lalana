@@ -47,9 +47,10 @@ create table pk (
 );
 
 insert into pk values
-    (default, 25, 7, 'point(-18.965778 47.529815)'),
-    (default, 28, 7, 'point(-18.994434 47.534318)'),
-    (default, 25.5, 7, 'point(-18.965778 47.529815)')
+    (default, 15, 7, 'point(-18.965778 47.529815)'),
+    (default, 16, 7, 'point(-18.978743 47.532961)'),
+    (default, 17, 7, 'point(-18.991739 47.532650)'),
+    (default, 18, 7, 'point(-19.002072 47.537811)')
 ;
 
 create table simba (
@@ -62,7 +63,7 @@ create table simba (
 );
 
 insert into simba values
-    (default, 1, 2, 47)
+    (default, 1, 4, 47)
 ;
 
 create table typeCouche (
@@ -158,5 +159,27 @@ begin
         coord := r.coord;
         return next;
     end loop;
+end;
+$$;
+
+create or replace function calc_cout_rn(id_lalana int)
+returns double precision
+language plpgsql
+as $$
+declare
+r record;
+longueur double precision;
+profondeur double precision;
+retour double precision;
+
+begin
+    retour := 0;
+    for r in (select s.niveau, t.prix, l.largeur, p1.valeur pk_debut, p2.valeur pk_fin from simba s join pk p1 on s.idPk_debut = p1.idPk join pk p2 on s.idPk_fin = p2.idPk join lalana l on p1.idLalana = l.idLalana join typeLalana t on l.idTypeLalana = t.idTypeLalana where l.idLalana = id_lalana)
+    loop
+        longueur := (r.pk_fin - r.pk_debut) * 1000;
+        profondeur := (r.niveau) * 0.001;
+        retour := retour + (longueur * profondeur * r.largeur * r.prix);
+    end loop;
+    return retour;
 end;
 $$;

@@ -13,15 +13,14 @@ class Simba:
         return self.calc_volume(con) * prix_metre_cube
 
     def calc_volume(self, con) -> float:
-        pk_debut = PkDAO.find_by_id(con, self.idPk_debut).valeur
-        pk_fin = PkDAO.find_by_id(con, self.idPk_fin).valeur
+        pk_debut = PkDAO.find_by_id(con, self.idPk_debut)
+        pk_fin = PkDAO.find_by_id(con, self.idPk_fin)
 
-        lalana = LalanaDAO.find_by_id(con, self.idPk_debut)
+        lalana = LalanaDAO.find_by_id(con, pk_debut.idLalana)
 
-        longueur = (pk_fin - pk_debut) * 1000           # m
+        longueur = (pk_fin.valeur - pk_debut.valeur) * 1000           # m
         profondeur = (self.niveau / 10)                 # cm
         profondeur /= 100                               # m
-
         return longueur * profondeur * lalana.largeur   # m3
 
     def calc_duration(self, con) -> float:

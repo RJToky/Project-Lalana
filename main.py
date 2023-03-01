@@ -1,11 +1,12 @@
 from connection.Bdd import Bdd
-from dao.PkDAO import PkDAO
 from dao.CoucheDetailDAO import CoucheDetailDAO
+from dao.SimbaDAO import SimbaDAO
 
 def main():
     con = Bdd.connect()
-    data = CoucheDetailDAO.find_couche_in_lalana(con, 7, 1000)
-    print(data)
+    simba = SimbaDAO.find_by_id(con, 1)
+    cout = simba.calc_cout(con)
+    print("Cout = ", cout)
     con.close()
 
 if __name__ == "__main__":
