@@ -17,7 +17,7 @@ create table typeLalana (
 
 insert into typeLalana values
     (default, 'Goudron', 6000, 5),
-    (default, 'Pavee', 3000, 6)
+    (default, 'Pave', 3000, 6)
 ;
 
 create table lalana (
@@ -47,11 +47,20 @@ create table pk (
 );
 
 insert into pk values
-    (default, 15, 7, 'point(-18.965778 47.529815)'),
-    (default, 16, 7, 'point(-18.978743 47.532961)'),
-    (default, 17, 7, 'point(-18.991739 47.532650)'),
-    (default, 18, 7, 'point(-19.002072 47.537811)')
+    (default, 9, 7, 'point(-18.965778 47.529815)'),
+    (default, 10, 7, 'point(-18.978743 47.532961)'),
+    (default, 11, 7, 'point(-18.991739 47.532650)'),
+    (default, 12, 7, 'point(-19.002072 47.537811)'),
+    (default, 13, 7, 'point(-19.016187 47.537948)'),
+    (default, 14, 7, 'point(-19.026325 47.544493)'),
+    (default, 15, 7, 'point(-19.040620 47.545030)'),
+    (default, 16, 7, 'point(-19.054478 47.545459)')
 ;
+
+-- select st_distance(
+--     st_makePoint(-19.040620, 47.545030)::geography,
+--     st_makePoint(-19.054478, 47.545459)::geography
+-- );
 
 create table simba (
     idSimba serial primary key,
@@ -63,7 +72,8 @@ create table simba (
 );
 
 insert into simba values
-    (default, 1, 4, 47)
+    (default, 1, 4, 47),
+    (default, 6, 7, 14)
 ;
 
 create table typeCouche (
@@ -107,6 +117,12 @@ create or replace view simbaDetail as (
     from simba s
     join pk pk1 on s.idPk_debut = pk1.idPk
     join pk pk2 on s.idPk_fin = pk2.idPk
+);
+
+create or replace view lalanaDetail as (
+    select l.*, t.nomType, t.prix, t.duree, calc_cout_rn(l.idLalana) cout
+    from lalana l
+    join typeLalana t on l.idTypeLalana = t.idTypeLalana
 );
 
 -- Function

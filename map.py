@@ -4,12 +4,13 @@ from dao.CoucheDetailDAO import CoucheDetailDAO
 from dao.SimbaDetailDAO import SimbaDetailDAO
 from dao.TypeCoucheDAO import TypeCoucheDAO
 from dao.SimbaDAO import SimbaDAO
+from dao.PkDAO import PkDAO
 
 def time_as_text(time: float) -> str:
     if time < 24:
         return str(time) + "h"
-    j = time // 24
-    h = time % 24
+    j = int(time // 24)
+    h = int(time % 24)
     return str(j) + "j " + str(h) + "h"
 
 def get_icon(key: str) -> str:
@@ -59,7 +60,8 @@ def init():
 
         simba = SimbaDAO.find_by_id(con, simba_detail[i].idSimba)
         
-        popup_pk = """
+        popup_pk1 = """
+            <p>PK : """ + str(int(PkDAO.find_by_id(con, simba.idPk_debut).valeur)) + """</p>
             <p>Cout : """ + str(simba.calc_cout(con)) + """ Ar</p>
             <p>Duree : """ + time_as_text(simba.calc_duration(con)) + """ </p>
         """
@@ -67,13 +69,18 @@ def init():
         folium.Marker(
             location = [simba_detail[i].x_debut, simba_detail[i].y_debut],
             icon = folium.Icon(color = "red"),
-            popup = popup_pk
+            popup = popup_pk1
         ).add_to(layer_simba)
 
+        popup_pk2 = """
+            <p>PK : """ + str(int(PkDAO.find_by_id(con, simba.idPk_fin).valeur)) + """</p>
+            <p>Cout : """ + str(simba.calc_cout(con)) + """ Ar</p>
+            <p>Duree : """ + time_as_text(simba.calc_duration(con)) + """ </p>
+        """
         folium.Marker(
             location = [simba_detail[i].x_fin, simba_detail[i].y_fin],
             icon = folium.Icon(color = "red"),
-            popup = popup_pk
+            popup = popup_pk2
         ).add_to(layer_simba)
 
         layer_simba.add_to(folium_map)

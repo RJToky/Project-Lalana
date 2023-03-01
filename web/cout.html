@@ -1,0 +1,167 @@
+<style>
+  .leaflet-bottom.leaflet-right {
+    display: none !important;
+  }
+
+  .modal-content {
+    padding: 2% 2%;
+  }
+  div.btn-lalana,
+  div.btn-lalana:hover {
+    cursor: pointer;
+    position: absolute;
+    width: 3em;
+    height: 3em;
+    background-color: white;
+    top: 67px;
+    right: 10px;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+  }
+  div.btn-lalana > img {
+    width: 25px;
+  }
+</style>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename = 'bulma/bulma.css') }}"
+/>
+<div class="js-modal-trigger btn-lalana" data-target="modal-js-example">
+  <img src="{{ url_for('static', filename = 'svg/road-svgrepo-com.svg') }}" />
+</div>
+<div id="modal-js-example" class="modal" style="z-index: 1000">
+  <div class="modal-background"></div>
+
+  <div class="modal-content">
+    <h1 class="title has-text-link">Detail lalana</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Type</th>
+          <th>Cout de reparation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="has-text-grey-dark">{{ data[0].nomLalana }}</td>
+          <td class="has-text-grey-dark">{{ data[0].nomType }}</td>
+          <td class="has-text-grey-dark">{{ data[0].cout }}Ar</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="field">
+      <div class="control">
+        <div class="select">
+          <select style="width: 100vw" id="lalana" name="typeCouche" required>
+            {% for row in data %}
+            <option value="{{ row.idLalana }}">{{ row.nomLalana }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>
+<script>
+  window.addEventListener("load", () => {
+    const tbody = document.querySelector("table.table > tbody");
+    const select = document.querySelector("#lalana");
+
+    select.addEventListener("click", (e) => {
+      e.preventDefault();
+      send();
+    });
+
+    const send = () => {
+      var xhr;
+      try {
+        xhr = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e) {
+        try {
+          xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e2) {
+          try {
+            xhr = new XMLHttpRequest();
+          } catch (e3) {
+            xhr = false;
+          }
+        }
+      }
+
+      xhr.addEventListener("load", (e) => {
+        let msg = e.target.responseText;
+        let data = JSON.parse(msg);
+        tbody.innerHTML = `
+          <tr>
+            <td class="has-text-grey-dark">${data[0]}</td>
+            <td class="has-text-grey-dark">${data[1]}</td>
+            <td class="has-text-grey-dark">${data[2]}Ar</td>
+          </tr>
+        `;
+      });
+
+      xhr.open("GET", `/traitement?idLalana=${select.value}`);
+      xhr.send(null);
+    };
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Functions to open and close a modal
+    function openModal($el) {
+      $el.classList.add("is-active");
+    }
+
+    function closeModal($el) {
+      $el.classList.remove("is-active");
+    }
+
+    function closeAllModals() {
+      (document.querySelectorAll(".modal") || []).forEach(($modal) => {
+        closeModal($modal);
+      });
+    }
+
+    // Add a click event on buttons to open a specific modal
+    (document.querySelectorAll(".js-modal-trigger") || []).forEach(
+      ($trigger) => {
+        const modal = $trigger.dataset.target;
+        const $target = document.getElementById(modal);
+
+        $trigger.addEventListener("click", () => {
+          openModal($target);
+        });
+      }
+    );
+
+    // Add a click event on various child elements to close the parent modal
+    (
+      document.querySelectorAll(
+        ".modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button"
+      ) || []
+    ).forEach(($close) => {
+      const $target = $close.closest(".modal");
+
+      $close.addEventListener("click", () => {
+        closeModal($target);
+      });
+    });
+
+    // Add a keyboard event to close all modals
+    document.addEventListener("keydown", (event) => {
+      const e = event || window.event;
+
+      if (e.keyCode === 27) {
+        // Escape key
+        closeAllModals();
+      }
+    });
+  });
+</script>
