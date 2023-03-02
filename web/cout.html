@@ -6,6 +6,7 @@
   .modal-content {
     padding: 2% 2%;
   }
+
   div.btn-lalana,
   div.btn-lalana:hover {
     cursor: pointer;
@@ -21,9 +22,15 @@
     align-items: center;
     border-radius: 6px;
     border: 2px solid rgba(0, 0, 0, 0.2);
+    background-clip: padding-box;
   }
+
   div.btn-lalana > img {
     width: 25px;
+  }
+
+  a.button {
+    text-decoration: none;
   }
 </style>
 <link
@@ -54,14 +61,22 @@
         </tr>
       </tbody>
     </table>
-    <div class="field">
+    <div class="field is-grouped" style="justify-content: space-between">
       <div class="control">
         <div class="select">
-          <select style="width: 100vw" id="lalana" name="typeCouche" required>
+          <select id="lalana" name="typeCouche" required>
             {% for row in data %}
             <option value="{{ row.idLalana }}">{{ row.nomLalana }}</option>
             {% endfor %}
           </select>
+        </div>
+      </div>
+      <div class="field is-grouped">
+        <div class="control">
+          <a href="/lalana" class="button is-link is-outlined">Voir Lalana </a>
+        </div>
+        <div class="control">
+          <a href="/couche" class="button is-link is-outlined">Voir Couche </a>
         </div>
       </div>
     </div>
@@ -107,7 +122,7 @@
         `;
       });
 
-      xhr.open("GET", `/traitement?idLalana=${select.value}`);
+      xhr.open("GET", `/traitement_cout?idLalana=${select.value}`);
       xhr.send(null);
     };
   });

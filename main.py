@@ -1,13 +1,15 @@
 from connection.Bdd import Bdd
-from dao.CoucheDetailDAO import CoucheDetailDAO
 from dao.SimbaDAO import SimbaDAO
 from dao.LalanaDAO import LalanaDAO
+from dao.CoucheDetailDAO import CoucheDetailDAO
 from dao.LalanaDetailDao import LalanaDetailDAO
+from dao.SimbaDetailDAO import SimbaDetailDAO
+from model.Lalana import Lalana
 
 def main():
     con = Bdd.connect()
-    lalana_detail = LalanaDetailDAO.find_by_id(con, 2)
-    print(lalana_detail)
+    data = Lalana.trier_par_nbr_couche(con, 1, 100)
+    print(data)
     con.close()
 
 if __name__ == "__main__":

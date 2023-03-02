@@ -1,0 +1,23 @@
+main {
+  min-height: calc(90vh - 3.25rem);
+}
+
+@media screen and (max-width: 1023px) {
+  #title {
+    flex-direction: column;
+  }
+
+  main {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .navbar > .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar-end > .navbar-item {
+    padding: 0.5rem 0.75rem !important;
+  }
+}

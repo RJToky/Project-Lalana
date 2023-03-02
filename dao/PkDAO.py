@@ -119,7 +119,7 @@ class PkDAO:
             cur.close()
         return rep
     
-    def find_all_pk_in_simba(con, id: int):
+    def find_all_by_idSimba(con, id: int):
         __is_open = False
         try:
             if con is None:

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename = 'bulma/bulma.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename = 'css/couche.css') }}"
+    />
+    <title>Lalana</title>
+  </head>
+  <body>
+    <header class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+          <a href="/couche" class="navbar-item title has-text-link">Lalana</a>
+        </div>
+        <div class="navbar-end">
+          <div class="navbar-item" style="padding: 0.5rem 0rem">
+            <a href="/" class="button is-link is-outlined">
+              <strong>Map</strong>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="content py-5">
+      <div class="container">
+        <form class="level" action="/result_couche" method="get">
+          <div class="level-left">
+            <div class="level-item">
+              <h1 class="title has-text-grey-dark">Liste des couches</h1>
+            </div>
+          </div>
+          <div class="level-right">
+            <div class="level-item">
+              <div class="field is-grouped">
+                <div class="control">
+                  <div class="select">
+                    <select name="idTypeCouche" required>
+                      <option value="0">Type couche</option>
+                      {% for row in data[0] %}
+                      <option value="{{ row.idTypeCouche }}">
+                        {{ row.nomType }}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select name="idLalana" required>
+                      <option value="0">Lalana</option>
+                      {% for row in data[1] %}
+                      <option value="{{ row.idLalana }}">
+                        {{ row.nomLalana }}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="control">
+                  <input
+                    class="input"
+                    name="rayon"
+                    placeholder="Rayon (m)"
+                    type="number"
+                  />
+                </div>
+                <div class="control">
+                  <button class="button is-link">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <table class="table is-striped">
+          <thead>
+            <tr>
+              <th>idCouche</th>
+              <th>Nom</th>
+              <th>Type couche</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in data[2] %}
+            <tr>
+              <td>{{ row.idCouche }}</td>
+              <td>{{ row.nom }}</td>
+              <td>{{ row.nomType }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

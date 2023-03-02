@@ -50,8 +50,8 @@ def init():
             layer_couche.add_to(folium_map)
     
     simba_detail = SimbaDetailDAO.find_all(con)
+    layer_simba = folium.FeatureGroup("Simba")
     for i in range(len(simba_detail)):
-        layer_simba = folium.FeatureGroup("Simba")
 
         folium.PolyLine(
             locations = [[simba_detail[i].x_debut, simba_detail[i].y_debut], [simba_detail[i].x_fin, simba_detail[i].y_fin]],
@@ -68,7 +68,7 @@ def init():
 
         folium.Marker(
             location = [simba_detail[i].x_debut, simba_detail[i].y_debut],
-            icon = folium.Icon(color = "red"),
+            icon = folium.Icon(icon = "road", prefix = "fa", color = "red"),
             popup = popup_pk1
         ).add_to(layer_simba)
 
@@ -79,7 +79,7 @@ def init():
         """
         folium.Marker(
             location = [simba_detail[i].x_fin, simba_detail[i].y_fin],
-            icon = folium.Icon(color = "red"),
+            icon = folium.Icon(icon = "road", prefix = "fa", color = "red"),
             popup = popup_pk2
         ).add_to(layer_simba)
 

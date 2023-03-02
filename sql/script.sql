@@ -16,8 +16,8 @@ create table typeLalana (
 );
 
 insert into typeLalana values
-    (default, 'Goudron', 6000, 5),
-    (default, 'Pave', 3000, 6)
+    (default, 'Goudron', 6000, 2),
+    (default, 'Pave', 3000, 3)
 ;
 
 create table lalana (
@@ -136,21 +136,39 @@ r1 record;
 r2 record;
 
 begin
-    for r1 in (select * from pk where pk.idLalana = id_lalana order by pk.valeur asc)
-    loop
-        for r2 in (select * from coucheDetail cd where st_dwithin(cd.coord, (select pk.coord from pk where pk.idPk = r1.idPk), rayon))
+    if rayon < 0 then
+        for r1 in (select * from pk where pk.idLalana = id_lalana order by pk.valeur asc)
         loop
-            idcouche := r2.idcouche;
-            idtypecouche := r2.idtypecouche;
-            nomtype := r2.nomtype;
-            x := r2.x;
-            y := r2.y;
-            nbr := r2.nbr;
-            nom := r2.nom;
-            coord := r2.coord;
-            return next;
+            for r2 in (select * from coucheDetail cd)
+            loop
+                idcouche := r2.idcouche;
+                idtypecouche := r2.idtypecouche;
+                nomtype := r2.nomtype;
+                x := r2.x;
+                y := r2.y;
+                nbr := r2.nbr;
+                nom := r2.nom;
+                coord := r2.coord;
+                return next;
+            end loop;
         end loop;
-    end loop;
+    else
+        for r1 in (select * from pk where pk.idLalana = id_lalana order by pk.valeur asc)
+        loop
+            for r2 in (select * from coucheDetail cd where st_dwithin(cd.coord, (select pk.coord from pk where pk.idPk = r1.idPk), rayon))
+            loop
+                idcouche := r2.idcouche;
+                idtypecouche := r2.idtypecouche;
+                nomtype := r2.nomtype;
+                x := r2.x;
+                y := r2.y;
+                nbr := r2.nbr;
+                nom := r2.nom;
+                coord := r2.coord;
+                return next;
+            end loop;
+        end loop;
+    end if;
 end;
 $$;
 
@@ -197,5 +215,27 @@ begin
         retour := retour + (longueur * profondeur * r.largeur * r.prix);
     end loop;
     return retour;
+end;
+$$;
+
+create or replace function trier_par_nbr_couche(id_typeCouche int, rayon double precision)
+returns table (nomLalana varchar(15), nomType varchar(15), nbr int)
+language plpgsql
+as $$
+declare
+r1 record;
+
+begin
+    for r1 in (select * from lalana)
+    loop
+        nomLalana := r1.nomLalana;
+        nomType := (select t.nomType nomType from typeCouche t where t.idTypeCouche = id_typeCouche);
+        if id_typeCouche = 3 then
+            nbr := (select coalesce(sum(f.nbr), 0) nbr from  find_couche_in_lalana(r1.idLalana, rayon) f where f.idTypeCouche = id_typeCouche);
+        else
+            nbr := (select count(f.*) nbr from  find_couche_in_lalana(r1.idLalana, rayon) f where f.idTypeCouche = id_typeCouche);
+        end if;
+        return next;
+    end loop;
 end;
 $$;
