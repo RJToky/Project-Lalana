@@ -44,38 +44,15 @@ def create_app():
     def result_couche():
         idTypeCouche = int(request.args.get("idTypeCouche"))
         idLalana = int(request.args.get("idLalana"))
-        rayon = -1
+        rayon = float(request.args.get("rayon"))
 
         con = Bdd.connect()
 
-        if idTypeCouche == 0 and idLalana == 0 and request.args.get("rayon") == "":
-            return couche()
-
-        elif idTypeCouche != 0 and idLalana == 0 and request.args.get("rayon") == "":
-            data = [
-                TypeCoucheDAO.find_all(con),
-                LalanaDetailDAO.find_all(con), 
-                CoucheDetailDAO.find_by_idTypeCouche(con, int(idTypeCouche))
-            ]
-            return couche(data)
-        
-        elif idTypeCouche == 0 and idLalana != 0 and request.args.get("rayon") != "":
-            rayon = float(request.args.get("rayon"))
-            data = [
-                TypeCoucheDAO.find_all(con),
-                LalanaDetailDAO.find_all(con), 
-                CoucheDetailDAO.find_all_couche_in_lalana(con, idLalana, rayon)
-            ]
-
-        else:
-            if request.args.get("rayon") != "":
-                rayon = float(request.args.get("rayon"))
-
-            data = [
-                TypeCoucheDAO.find_all(con),
-                LalanaDetailDAO.find_all(con), 
-                CoucheDetailDAO.find_all_couche_in_lalana_by_idTypeCouche(con, idTypeCouche, idLalana, rayon)
-            ]
+        data = [
+            TypeCoucheDAO.find_all(con),
+            LalanaDetailDAO.find_all(con), 
+            CoucheDetailDAO.find_all_couche_in_lalana_by_idTypeCouche(con, idTypeCouche, idLalana, rayon)
+        ]
             
         con.close()
         return couche(data)
@@ -91,16 +68,16 @@ def create_app():
     @app.route("/result_lalana", methods = ["GET", "POST"])
     def result_lalana():
         idTypeCouche = int(request.args.get("idTypeCouche"))
+        rayon = float(request.args.get("rayon"))
 
-        if idTypeCouche != 0 and request.args.get("rayon") != "":
-            rayon = float(request.args.get("rayon"))
+        con = Bdd.connect()
 
-            data = [
-                TypeCoucheDAO.find_all(None),
-                Lalana.trier_par_nbr_couche(None, idTypeCouche, rayon)
-            ]
-            return render_template("lalana.html", data = data)
-
-        return lalana()
+        data = [
+            TypeCoucheDAO.find_all(con),
+            Lalana.trier_par_nbr_couche(con, idTypeCouche, rayon)
+        ]
+        
+        con.close()
+        return render_template("lalana.html", data = data)
     
     return app

@@ -43,7 +43,7 @@
                 <div class="control">
                   <div class="select">
                     <select name="idTypeCouche" required>
-                      <option value="0">Type couche</option>
+                      <option value="">Type couche</option>
                       {% for row in data[0] %}
                       <option value="{{ row.idTypeCouche }}">
                         {{ row.nomType }}
@@ -55,7 +55,7 @@
                 <div class="control">
                   <div class="select">
                     <select name="idLalana" required>
-                      <option value="0">Lalana</option>
+                      <option value="">Lalana</option>
                       {% for row in data[1] %}
                       <option value="{{ row.idLalana }}">
                         {{ row.nomLalana }}
@@ -70,6 +70,8 @@
                     name="rayon"
                     placeholder="Rayon (m)"
                     type="number"
+                    min="0"
+                    required
                   />
                 </div>
                 <div class="control">
