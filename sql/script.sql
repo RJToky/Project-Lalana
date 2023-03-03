@@ -107,7 +107,6 @@ insert into simba values
     (default, 30, 31, 62)
 ;
 
-
 create table typeCouche (
     idTypeCouche serial primary key,
     nomType varchar(15)
