@@ -19,7 +19,7 @@ def get_icon(key: str) -> str:
     if key == "Etablissement":
         return "school"
     elif key == "Hopital":
-        return "hospital"
+        return "medkit"
     return "home"
 
 def instance_map(location = [-19.001707, 47.538223], zoom_start = 13):
@@ -65,7 +65,7 @@ def init():
         
         popup_pk1 = """
             <p>""" + PkDetailDAO.find_by_id(con, simba.idPk_debut).nomLalana + """</p>
-            <p>PK : """ + str(int(PkDAO.find_by_id(con, simba.idPk_debut).valeur)) + """</p>
+            <p>PK : """ + str(PkDAO.find_by_id(con, simba.idPk_debut).valeur) + """</p>
             <p>Cout : """ + str(simba.calc_cout(con)) + """ Ar</p>
             <p>Duree : """ + time_as_text(simba.calc_duration(con)) + """ </p>
         """
@@ -78,7 +78,7 @@ def init():
 
         popup_pk2 = """
             <p>""" + PkDetailDAO.find_by_id(con, simba.idPk_fin).nomLalana + """</p>
-            <p>PK : """ + str(int(PkDAO.find_by_id(con, simba.idPk_fin).valeur)) + """</p>
+            <p>PK : """ + str(PkDAO.find_by_id(con, simba.idPk_fin).valeur) + """</p>
             <p>Cout : """ + str(simba.calc_cout(con)) + """ Ar</p>
             <p>Duree : """ + time_as_text(simba.calc_duration(con)) + """ </p>
         """

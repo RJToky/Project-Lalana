@@ -35,7 +35,8 @@ insert into lalana values
     (default, 'RN4', 7.2, 2),
     (default, 'RN5', 10, 2),
     (default, 'RN6', 7.1, 2),
-    (default, 'RN7', 8.4, 2)
+    (default, 'RN7', 8.4, 2),
+    (default, 'RN8', 5, 1)
 ;
 
 create table pk (
@@ -69,7 +70,19 @@ insert into pk values
     (default, 28, 3, 'point(-18.875354 47.548411)'),
     (default, 39, 3, 'point(-18.855969 47.553096)'),
     (default, 47, 3, 'point(-18.851328 47.555459)'),
-    (default, 66, 3, 'point(-18.823710 47.558661)')
+    (default, 66, 3, 'point(-18.823710 47.558661)'),
+    
+    (default, 300, 8, 'POINT(-18.147246 49.389650)'),
+    (default, 301, 8, 'POINT(-18.137295 49.397847)'),
+    (default, 301.5, 8, 'POINT(-18.133624 49.399392)'),
+    (default, 302, 8, 'POINT(-18.128743 49.400165)'),
+    (default, 302.5, 8, 'POINT(-18.122071 49.399264)'), --start 25
+    (default, 302.8, 8, 'POINT(-18.120686 49.398983)'), --end 26
+    (default, 302.3, 8, 'POINT(-18.115891 49.396473)'),
+    (default, 302.5, 8, 'POINT(-18.109202 49.394649)'),
+    (default, 304, 8, 'POINT(-18.089796 49.393409)'),
+    (default, 304.1, 8, 'POINT(-18.088225 49.392980)'), --start 30
+    (default, 304.2, 8, 'POINT(-18.087573 49.392658)')   --end 31
 ;
 
 create table simba (
@@ -89,7 +102,9 @@ insert into simba values
     (default, 11, 12, 30),
     (default, 13, 14, 67),
     (default, 16, 17, 54),
-    (default, 18, 19, 27)
+    (default, 18, 19, 27),
+    (default, 25, 26, 24),
+    (default, 30, 31, 62)
 ;
 
 
@@ -145,7 +160,6 @@ insert into couche values
     (default, 1, 'point(-18.852229 47.557134)', default, 'Bird'),
     (default, 1, 'point(-18.841733 47.550382)', default, 'Alliance'),
     (default, 4, 'point(-18.887355 47.625445)', 634, 'Cité'),
-    (default, 4, 'point(-18.881906 47.634944)', 446, 'Alakamisy'),
     (default, 4, 'point(-18.868048 47.656084)', 134, 'Village TR'),
     (default, 4, 'point(-18.921125 47.519385)', 98, 'Kolotsaina'),
     (default, 4, 'point(-18.923745 47.521330)', 103, 'Kromania'),
@@ -157,9 +171,13 @@ insert into couche values
     (default, 4, 'point(-17.317084 49.409746)', 63, 'Antokotany'),
     (default, 4, 'point(-18.884714 47.537220)', 131, 'Betavoahangy'),
     (default, 4, 'point(-18.878989 47.541404)', 167, 'Malaza'),
-    (default, 4, 'point(-18.823080 47.562373)', 182, 'Fietrana')
-;
+    (default, 4, 'point(-18.823080 47.562373)', 182, 'Fietrana'),
 
+    (default, 4, 'POINT(-18.142172 49.395385)', 10000, 'Toamasina'),
+    (default, 1, 'POINT(-18.140156 49.397235)', default, 'EPP Lovasoa'),
+    (default, 4, 'POINT(-18.137324 49.395273)', 500, 'Cite Haras'),
+    (default, 3, 'POINT(-18.131494 49.400543)', default, 'Chez Diata')
+;
 
 -- View
 
