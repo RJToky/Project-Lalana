@@ -8,8 +8,8 @@ from model.Lalana import Lalana
 
 def main():
     con = Bdd.connect()
-    data = Lalana.trier_par_nbr_couche(con, 1, 100)
-    print(data)
+    data = LalanaDetailDAO.find_by_id(con, 7)
+    print(data.dureeReparation)
     con.close()
 
 if __name__ == "__main__":

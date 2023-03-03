@@ -1,10 +1,9 @@
 class LalanaDetail:
-    def __init__(self, idLalana: int, nomLalana: str, largeur: float, idTypeLalana: int, nomType: str, prix: float, duree: float, cout: float) -> None:
+    def __init__(self, idLalana: int, nomLalana: str, largeur: float, idTypeLalana: int, nomType: str, coutReparation: float, dureeReparation: float) -> None:
         self.idLalana = idLalana
         self.nomLalana = nomLalana
         self.largeur = largeur
         self.idTypeLalana = idTypeLalana
         self.nomType = nomType
-        self.prix = prix
-        self.duree = duree
-        self.cout = cout
+        self.coutReparation = coutReparation
+        self.dureeReparation = dureeReparation

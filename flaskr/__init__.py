@@ -1,4 +1,5 @@
 import json
+from map import *
 from flask import Flask, render_template, request
 from connection.Bdd import Bdd
 from dao.LalanaDetailDao import LalanaDetailDAO
@@ -11,14 +12,23 @@ def create_app():
 
     @app.route("/")
     def index():
+        con = Bdd.connect()
+
+        data = LalanaDetailDAO.find_all(con)
+        row = [data[0].nomLalana, data[0].nomType, data[0].coutReparation, time_as_text(data[0].dureeReparation)]
+        list_lalana = LalanaDetailDAO.find_all(con)
+
         map_template = render_template("map.html")
-        cout_template = render_template("cout.html", data = LalanaDetailDAO.find_all(None))
+        cout_template = render_template("cout.html", data = row, list_lalana = list_lalana)
+
+        con.close()
         return map_template + cout_template
     
     @app.route("/traitement_cout", methods = ["GET", "POST"])
     def traitement_cout():
         data = LalanaDetailDAO.find_by_id(None, int(request.args.get("idLalana")))
-        data = [data.nomLalana, data.nomType, data.cout]
+        data = [data.nomLalana, data.nomType, data.coutReparation, time_as_text(data.dureeReparation)]
+
         return json.dumps(data)
 
     @app.route("/couche")
@@ -82,18 +92,15 @@ def create_app():
     def result_lalana():
         idTypeCouche = int(request.args.get("idTypeCouche"))
 
-        if (idTypeCouche == 0 and request.args.get("rayon") == "") or (idTypeCouche == 0):
-            return lalana()
-        
-        else:
-            rayon = -1
-            if request.args.get("rayon") != "":
-                rayon = float(request.args.get("rayon"))
+        if idTypeCouche != 0 and request.args.get("rayon") != "":
+            rayon = float(request.args.get("rayon"))
 
             data = [
                 TypeCoucheDAO.find_all(None),
                 Lalana.trier_par_nbr_couche(None, idTypeCouche, rayon)
             ]
-        return render_template("lalana.html", data = data)
+            return render_template("lalana.html", data = data)
+
+        return lalana()
     
     return app

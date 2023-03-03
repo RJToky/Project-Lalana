@@ -3,6 +3,10 @@
     display: none !important;
   }
 
+  .leaflet-popup-content > div {
+    width: 13em !important;
+  }
+
   .modal-content {
     padding: 2% 2%;
   }
@@ -51,13 +55,15 @@
           <th>Nom</th>
           <th>Type</th>
           <th>Cout de reparation</th>
+          <th>Duree de reparation</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="has-text-grey-dark">{{ data[0].nomLalana }}</td>
-          <td class="has-text-grey-dark">{{ data[0].nomType }}</td>
-          <td class="has-text-grey-dark">{{ data[0].cout }}Ar</td>
+          <td class="has-text-grey-dark">{{ data[0] }}</td>
+          <td class="has-text-grey-dark">{{ data[1] }}</td>
+          <td class="has-text-grey-dark">{{ data[2] }}Ar</td>
+          <td class="has-text-grey-dark">{{ data[3] }}</td>
         </tr>
       </tbody>
     </table>
@@ -65,7 +71,7 @@
       <div class="control">
         <div class="select">
           <select id="lalana" name="typeCouche" required>
-            {% for row in data %}
+            {% for row in list_lalana %}
             <option value="{{ row.idLalana }}">{{ row.nomLalana }}</option>
             {% endfor %}
           </select>
@@ -118,6 +124,7 @@
             <td class="has-text-grey-dark">${data[0]}</td>
             <td class="has-text-grey-dark">${data[1]}</td>
             <td class="has-text-grey-dark">${data[2]}Ar</td>
+            <td class="has-text-grey-dark">${data[3]}</td>
           </tr>
         `;
       });
