@@ -52,6 +52,21 @@ def init():
 
             layer_couche.add_to(folium_map)
     
+    all_pk = PkDetailDAO.find_all2(con)
+    layer_pk = folium.FeatureGroup("PK")
+    for i in range(len(all_pk)):
+        popup_pk = """
+            <p>""" + all_pk[i].nomLalana + """</p>
+            <p>PK : """ + str(all_pk[i].valeur) + """</p>
+        """
+        folium.Marker(
+            location = [all_pk[i].x, all_pk[i].y],
+            icon = folium.Icon(color = "blue"),
+            popup = popup_pk
+        ).add_to(layer_pk)
+
+        layer_pk.add_to(folium_map)
+
     simba_detail = SimbaDetailDAO.find_all(con)
     layer_simba = folium.FeatureGroup("Simba")
     for i in range(len(simba_detail)):

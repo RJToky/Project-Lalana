@@ -4,12 +4,13 @@ from dao.LalanaDAO import LalanaDAO
 from dao.CoucheDetailDAO import CoucheDetailDAO
 from dao.LalanaDetailDao import LalanaDetailDAO
 from dao.SimbaDetailDAO import SimbaDetailDAO
+from dao.PkDetailDAO import PkDetailDAO
 from model.Lalana import Lalana
 
 def main():
     con = Bdd.connect()
-    data = LalanaDetailDAO.find_by_id(con, 7)
-    print(data.dureeReparation)
+    data = PkDetailDAO.find_all2(con)
+    print(len(data))
     con.close()
 
 if __name__ == "__main__":

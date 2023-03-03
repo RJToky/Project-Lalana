@@ -20,7 +20,7 @@ class PkDetailDAO:
             cur.execute(sql, value)
             data = cur.fetchone()
 
-            rep = PkDetail(data[0], data[1], data[2], data[3], data[4], data[5])
+            rep = PkDetail(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
 
         except(Exception) as e:
             raise e
@@ -48,7 +48,38 @@ class PkDetailDAO:
 
             rep = []
             for row in data:
-                temp = PkDetail(row[0], row[1], row[2], row[3], row[4], row[5])
+                temp = PkDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                rep.append(temp)
+
+        except(Exception) as e:
+            raise e
+        finally:
+            if __is_open:
+                con.close()
+            cur.close()
+        return rep
+    
+    @staticmethod
+    def find_all2(con):
+        __is_open = False
+        try:
+            if con is None:
+                __is_open = True
+                con = Bdd.connect()
+            
+            cur = con.cursor()
+            sql = """
+                select *
+                from pkDetail
+                where coord not in (select coord_debut from simbaDetail)
+                and coord not in (select coord_fin from simbaDetail)
+            """
+            cur.execute(sql)
+            data = cur.fetchall()
+
+            rep = []
+            for row in data:
+                temp = PkDetail(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                 rep.append(temp)
 
         except(Exception) as e:

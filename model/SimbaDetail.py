@@ -1,6 +1,7 @@
 class SimbaDetail:
-    def __init__(self, idSimba: int, idPk_debut: int, idPk_fin: int, x_debut: float, y_debut: float, x_fin: float, y_fin: float, coord_debut: str, coord_fin: str) -> None:
+    def __init__(self, idSimba: int, idLalana: int, idPk_debut: int, idPk_fin: int, x_debut: float, y_debut: float, x_fin: float, y_fin: float, coord_debut: str, coord_fin: str) -> None:
         self.idSimba = idSimba
+        self.idLalana = idLalana
         self.idPk_debut = idPk_debut
         self.idPk_fin = idPk_fin
         self.x_debut = x_debut

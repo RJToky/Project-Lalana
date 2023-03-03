@@ -151,7 +151,7 @@ insert into couche values
     (default, 1, 'point(-18.921602 47.523011)', default, 'Pepiniere'),
     (default, 1, 'point(-18.926318 47.516141)', default, 'LMA'),
     (default, 1, 'point(-18.965390 47.530140)', default, 'Epp'),
-    (default, 1, 'point(-18.986037 47.532560)', default, 'CEG'),
+    (default, 1, 'point(-18.986037 47.532560)', default, 'IT University'),
     (default, 1, 'point(-18.988035 47.529528)', default, 'Lycée'),
     (default, 1, 'point(-17.255430 49.415376)', default, 'Parc des P'),
     (default, 1, 'point(-17.323219 49.412450)', default, 'ISTS'),
@@ -188,7 +188,7 @@ create or replace view coucheDetail as (
 );
 
 create or replace view simbaDetail as (
-    select s.idSimba, s.idPk_debut, s.idPk_fin, st_x(st_astext(pk1.coord)) x_debut, st_y(st_astext(pk1.coord)) y_debut, st_x(st_astext(pk2.coord)) x_fin, st_y(st_astext(pk2.coord)) y_fin, pk1.coord coord_debut, pk2.coord coord_fin
+    select s.idSimba, pk1.idLalana, s.idPk_debut, s.idPk_fin, st_x(st_astext(pk1.coord)) x_debut, st_y(st_astext(pk1.coord)) y_debut, st_x(st_astext(pk2.coord)) x_fin, st_y(st_astext(pk2.coord)) y_fin, pk1.coord coord_debut, pk2.coord coord_fin
     from simba s
     join pk pk1 on s.idPk_debut = pk1.idPk
     join pk pk2 on s.idPk_fin = pk2.idPk
@@ -201,54 +201,99 @@ create or replace view lalanaDetail as (
 );
 
 create or replace view pkDetail as (
-    select p.*, l.nomLalana, l.largeur
+    select p.*, st_x(st_astext(p.coord)) x, st_y(st_astext(p.coord)) y, l.nomLalana, l.largeur
     from pk p join lalana l on p.idLalana = l.idLalana
 );
 
 -- Function
+
+-- select * from pk where pk.idLalana = id_lalana order by pk.valeur asc
+
+-- select *
+-- from pkDetail pd
+-- where (pd.coord in (select sd.coord_debut from simbaDetail sd)
+-- or pd.coord in (select sd.coord_fin from simbaDetail sd)) and pd.idLalana = id_lalana
+-- order by pd.valeur asc
+
+-- select *
+-- from pk p
+-- where p.idLalana = id_lalana and p.valeur
+-- between (
+--     select p1.valeur v1
+--     from simba s
+--     join pk p1 on s.idPk_debut = p1.idPk
+--     join pk p2 on s.idPk_fin = p2.idPk
+--     where s.idSimba = r.idSimba
+-- ) and (
+--     select p2.valeur v2
+--     from simba s join pk p1 on s.idPk_debut = p1.idPk
+--     join pk p2 on s.idPk_fin = p2.idPk
+--     where s.idSimba = r.idSimba
+-- ) order by p.valeur asc
 
 create or replace function couche_doublon_inclus(id_lalana int, rayon double precision)
 returns table (idcouche int, idtypecouche int, nomtype varchar(15), x double precision, y double precision, nbr int, nom varchar(30), coord geography(point))
 language plpgsql
 as $$
 declare
+r record;
 r1 record;
 r2 record;
 
 begin
-    if rayon < 0 then
-        for r1 in (select * from pk where pk.idLalana = id_lalana order by pk.valeur asc)
+    for r in (select * from simbaDetail sd where sd.idLalana = id_lalana)
+    loop
+        for r1 in (
+            select *
+            from pk p
+            where p.idLalana = id_lalana and p.valeur
+            between (
+                select p1.valeur v1
+                from simba s
+                join pk p1 on s.idPk_debut = p1.idPk
+                join pk p2 on s.idPk_fin = p2.idPk
+                where s.idSimba = r.idSimba
+            ) and (
+                select p2.valeur v2
+                from simba s join pk p1 on s.idPk_debut = p1.idPk
+                join pk p2 on s.idPk_fin = p2.idPk
+                where s.idSimba = r.idSimba
+            ) order by p.valeur asc)
         loop
-            for r2 in (select * from coucheDetail cd)
-            loop
-                idcouche := r2.idcouche;
-                idtypecouche := r2.idtypecouche;
-                nomtype := r2.nomtype;
-                x := r2.x;
-                y := r2.y;
-                nbr := r2.nbr;
-                nom := r2.nom;
-                coord := r2.coord;
-                return next;
-            end loop;
+            if rayon < 0 then
+                for r2 in (
+                    select *
+                    from coucheDetail cd)
+                loop
+                    idcouche := r2.idcouche;
+                    idtypecouche := r2.idtypecouche;
+                    nomtype := r2.nomtype;
+                    x := r2.x;
+                    y := r2.y;
+                    nbr := r2.nbr;
+                    nom := r2.nom;
+                    coord := r2.coord;
+                    return next;
+                end loop;
+            else
+                for r2 in (
+                    select *
+                    from coucheDetail cd
+                    where st_dwithin(cd.coord, (select pk.coord from pk where pk.idPk = r1.idPk), rayon))
+                loop
+                    idcouche := r2.idcouche;
+                    idtypecouche := r2.idtypecouche;
+                    nomtype := r2.nomtype;
+                    x := r2.x;
+                    y := r2.y;
+                    nbr := r2.nbr;
+                    nom := r2.nom;
+                    coord := r2.coord;
+                    return next;
+                end loop;
+            end if;
         end loop;
-    else
-        for r1 in (select * from pk where pk.idLalana = id_lalana order by pk.valeur asc)
-        loop
-            for r2 in (select * from coucheDetail cd where st_dwithin(cd.coord, (select pk.coord from pk where pk.idPk = r1.idPk), rayon))
-            loop
-                idcouche := r2.idcouche;
-                idtypecouche := r2.idtypecouche;
-                nomtype := r2.nomtype;
-                x := r2.x;
-                y := r2.y;
-                nbr := r2.nbr;
-                nom := r2.nom;
-                coord := r2.coord;
-                return next;
-            end loop;
-        end loop;
-    end if;
+    end loop;
 end;
 $$;
 
