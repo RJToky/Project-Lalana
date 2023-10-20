@@ -16,4 +16,7 @@ def main():
 if __name__ == "__main__":
     main()
 
-# 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
+
+# RUN 
+# $env:FLASK_APP="flaskr"
+# py -m flask run
